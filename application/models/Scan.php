@@ -21,7 +21,7 @@ class ScanModel extends Model {
     public function getProduct($productId)
     {
         $this->_db->where('product_id', $productId);
-        $data = $this->_db->get(SELF::TBL_PRODUCT);
+        $data = $this->_db->getOne(SELF::TBL_PRODUCT);
         if(!$data) {
             return FALSE;
         } 
@@ -32,7 +32,7 @@ class ScanModel extends Model {
     public function getWechat($appId)
     {
         $this->_db->where('app_id', $appId);
-        $data = $this->_db->get(SELF::TBL_WECHAT);
+        $data = $this->_db->getOne(SELF::TBL_WECHAT);
         if(!$data) {
             return FALSE;
         } 
@@ -56,7 +56,7 @@ class ScanModel extends Model {
     public function getOrder($out_trade_no)
     {
         $this->_db->where('out_trade_no', $out_trade_no);
-        $data = $this->_db->get(SELF::TBL_ORDER);
+        $data = $this->_db->getOne(SELF::TBL_ORDER);
         if(!$data) {
             return FALSE;
         } 
