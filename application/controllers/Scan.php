@@ -53,7 +53,6 @@ class ScanController extends Core
             'trade_type'       => 'NATIVE',
             // ...
         ];
-echo '<pre>';print_r($attributes);echo '</pre>';exit(); 
 
         $order = new Order($attributes);
         $payLib = new Pay();
