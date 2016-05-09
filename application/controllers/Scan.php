@@ -71,7 +71,8 @@ class ScanController extends Core
                     'err_code_des' =>$result->err_code_des ?? '',
             ];
              $reply['sign'] = \EasyWeChat\Payment\generate_sign($reply, $_SERVER['KEY'], 'md5'); 
-echo '<pre>';print_r($reply);echo '</pre>';exit(); 
+            $xml = $this->Common->toXml($reply);
+           echo '<pre>';print_r($xml);echo '</pre>';exit();  
         }
     }
 
