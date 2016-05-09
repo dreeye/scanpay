@@ -38,9 +38,13 @@ class ScanController extends Core
 
     public function orderAction()
     {
-        libxml_disable_entity_loader(true);
-        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);             
-       echo '<pre>';print_r($values);echo '</pre>';exit();  
+        //获取微信的请求参数
+        if (isset($GLOBALS['HTTP_RAW_POST_DATA']) && ($GLOBALS['HTTP_RAW_POST_DATA'] != '')) 
+        {   
+            $postStr = $GLOBALS['HTTP_RAW_POST_DATA'];
+        }   
+        $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+       echo '<pre>';print_r($postObj);echo '</pre>';exit();  
         $attributes = [
             'body'             => 'iPad mini 16G 白色',
             'detail'           => 'iPad mini 16G 白色',
