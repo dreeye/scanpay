@@ -26,6 +26,7 @@ class Pay {
     public function createOrder($order)
     {
         $payment = $this->getOptions();
+        return $payment->prepare($order);
         
     }
 
