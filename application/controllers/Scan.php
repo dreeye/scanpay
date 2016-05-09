@@ -46,8 +46,9 @@ class ScanController extends Core
         $attributes = [
             'body'             => 'iPad mini 16G 白色',
             'detail'           => 'iPad mini 16G 白色',
-            //'out_trade_no'     => '1217752501201407033233368018',
-            'total_fee'        => 0.1,
+            'out_trade_no'     => $productId,
+            'openid'     => $openId,
+            'total_fee'        => 1,
             'notify_url'       => 'http://scanpay.vzhen.com/order_notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             // ...
         ];
