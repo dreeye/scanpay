@@ -1,0 +1,6 @@
+{
+    "require": {
+        "joshcam/mysqli-database-class": "^2.5",
+        "overtrue/wechat": "^3.0"
+    }
+}
