@@ -38,13 +38,10 @@ class ScanController extends Core
 
     public function orderAction()
     {
-       echo '<pre>';print_r(file_get_contents('php://input'));echo '</pre>';exit();  
         //获取微信的请求参数
-        if (isset($GLOBALS['HTTP_RAW_POST_DATA']) && ($GLOBALS['HTTP_RAW_POST_DATA'] != '')) 
-        {   
-            $postStr = $GLOBALS['HTTP_RAW_POST_DATA'];
-        }   
+        $postStr = file_get_contents('php://input');  
         $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+       echo '<pre>';print_r(trim(strval($postObj->product_id)));echo '</pre>';exit();  
         $attributes = [
             'body'             => 'iPad mini 16G 白色',
             'detail'           => 'iPad mini 16G 白色',
