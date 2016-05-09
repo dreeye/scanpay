@@ -236,4 +236,23 @@ class Common
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
     } 
+
+      /**  
+     * 输出xml字符
+     * @throws WxPayException
+    **/
+    public function toXml($arr)
+    {    
+        $xml = "<xml>";
+        foreach ($this->arr as $key=>$val)
+        {    
+            if (is_numeric($val)){
+                $xml.="<".$key.">".$val."</".$key.">";
+            }else{
+                $xml.="<".$key."><![CDATA[".$val."]]></".$key.">";
+            }    
+        }    
+        $xml.="</xml>";
+        return $xml; 
+    }    
 }

@@ -57,11 +57,21 @@ class ScanController extends Core
         $order = new Order($attributes);
         $payLib = new Pay();
         $result = $payLib->createOrder($order);
-echo '<pre>';print_r($result);echo '</pre>';exit(); 
         error_log('DEBUG: '.$result);
         error_log('DEBUG: '.json_encode($attributes));
         if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS'){
-            $prepayId = $result->prepay_id;
+            $reply = [
+                    'return_code' =>$result->return_code,
+                    'return_msg' =>$result->return_msg,
+                    'appid'       =>$_SERVER['APP_ID'],
+                    'mch_id'        => $_SERVER['MER_ID'],
+                    'nonce_str' =>$result->nonce_str,
+                    'prepay_id' => $result->prepay_id,
+                    'result_code' =>$result->result_code,
+                    'err_code_des' =>$result->err_code_des ?? '',
+            ];
+             $reply['sign'] = \EasyWeChat\Payment\generate_sign($reply, $_SERVER['KEY'], 'md5'); 
+echo '<pre>';print_r($reply);echo '</pre>';exit(); 
         }
     }
 
