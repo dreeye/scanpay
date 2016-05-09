@@ -244,7 +244,7 @@ class Common
     public function toXml($arr)
     {    
         $xml = "<xml>";
-        foreach ($this->arr as $key=>$val)
+        foreach ($arr as $key=>$val)
         {    
             if (is_numeric($val)){
                 $xml.="<".$key.">".$val."</".$key.">";
