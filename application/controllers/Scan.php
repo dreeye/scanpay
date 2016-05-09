@@ -108,7 +108,7 @@ class ScanController extends Core
         }
     }
 
-    public function order_notify()
+    public function order_notifyAction()
     {
         $response = $app->payment->handleNotify(function($notify, $successful){
             // 你的逻辑
