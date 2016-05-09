@@ -55,10 +55,10 @@ class ScanController extends Core
         $order = new Order($attributes);
         $payLib = new Pay();
         $result = $payLib->createOrder($order);
+echo '<pre>';print_r($result);echo '</pre>';exit(); 
         if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS'){
             $prepayId = $result->prepay_id;
         }
-echo '<pre>';print_r($prepayId);echo '</pre>';exit(); 
     }
 
     public function order_notify()
