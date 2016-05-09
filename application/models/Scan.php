@@ -29,9 +29,14 @@ class ScanModel extends Model {
 
     }
 
-    public function getWechat($appId)
+    public function getWechat($val,$row='appid')
     {
-        $this->_db->where('app_id', $appId);
+        if($row=='appid') {
+            $this->_db->where('app_id', $val);
+        }else{
+            $this->_db->where('name', $val);
+
+        }
         $data = $this->_db->getOne(SELF::TBL_WECHAT);
         if(!$data) {
             return FALSE;

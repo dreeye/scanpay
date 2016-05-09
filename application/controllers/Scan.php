@@ -16,10 +16,14 @@ class ScanController extends Core
 
     public function create_productAction()
     {
+        $wechat = ( $this->_post['wechat'] ?? $this->Response->error('40016')) ? : $this->Response->error('40022');
         $body = ( $this->_post['body'] ?? $this->Response->error('40016')) ? : $this->Response->error('40019');
         $detail = ( $this->_post['detail'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40020');
         $total_fee = ( $this->_post['total_fee'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40021');
-        $payLib = new Pay();
+        if (! $weData = $this->scanMod->getWechat($wechat, 'name')) {
+            $this->Response->error('40023');
+        }
+        $payLib = new Pay($weData['app_id'], $weData['mch_id'], $weData['key']);
         $productId = $this->Common->random_string('alnum', 32);
         $qrUrl = $payLib->createQrUrl($productId);
         $product = [
@@ -78,7 +82,7 @@ class ScanController extends Core
         ];
 
         $order = new Order($attributes);
-        $payLib = new Pay();
+        $payLib = new Pay($weData['app_id'], $weData['mch_id'], $weData['key']);
         $result = $payLib->createOrder($order);
         error_log('DEBUG: '.$result);
         error_log('DEBUG: '.json_encode($attributes));
@@ -110,6 +114,16 @@ class ScanController extends Core
 
     public function order_notifyAction()
     {
+        //获取微信的请求参数
+        $postStr = file_get_contents('php://input');  
+        $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+        $appId = strval($postObj->appid);
+        // 根据微信发来的app id获取微信数据 
+        if ( ! $weData = $this->scanMod->getWechat($appId) ) {
+            error_log('wechat data is no exit: app id ='.$appId);
+            exit();
+        }
+        $payLib = new Pay($weData['app_id'], $weData['mch_id'], $weData['key']);
         $response = $app->payment->handleNotify(function($notify, $successful){
             // 你的逻辑
             error_log("DEBUG notify :".$notify);

@@ -6,13 +6,17 @@ use EasyWeChat\Foundation\Application;
 
 class Pay {
 
-    private   $Client;
+    private   $appId;
+    private   $mchId;
+    private   $key;
     protected $Response;
-    private   $ctripUrl = 'http://flights.ctrip.com/booking/';
 
-    public function __construct()
+    public function __construct($appId, $mchId, $key)
     {
         $this->Response = new Response();
+        $this->appId = $appId;
+        $this->mchId = $mchId;
+        $this->key = $key;
 
     }
 
@@ -33,11 +37,11 @@ class Pay {
     private function getOptions()
     {
         $options = [
-                'app_id' => $_SERVER['APP_ID'],
+                'app_id' => $this->appId,
                 // payment
                 'payment' => [
-                'merchant_id'        => $_SERVER['MER_ID'],
-                'key'                => $_SERVER['KEY'],
+                'merchant_id'        => $this->mchId,
+                'key'                => $this->key,
                 'cert_path'          => '', // XXX: 绝对路径！！！！
                 'key_path'           => '',      // XXX: 绝对路径！！！！
                 'notify_url'       => 'http://scanpay.vzhen.com/scan/order_notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
