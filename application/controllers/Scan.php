@@ -72,7 +72,8 @@ class ScanController extends Core
             ];
              $reply['sign'] = \EasyWeChat\Payment\generate_sign($reply, $_SERVER['KEY'], 'md5'); 
             $xml = $this->Common->toXml($reply);
-           echo '<pre>';print_r($xml);echo '</pre>';exit();  
+            error_log('DEBUG order xml :'.$xml);
+            echo $xml;
         }
     }
 
