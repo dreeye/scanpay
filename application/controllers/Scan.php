@@ -75,7 +75,7 @@ class ScanController extends Core
             'product_id'       => $productId,
             'openid'           => $openId,
             'total_fee'        => $productData['total_fee'],
-            // 'notify_url'       => 'http://scanpay.vzhen.com/order_notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'notify_url'       => 'http://scanpay.vzhen.com/order_notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type'       => 'NATIVE',
             'appid'            => $appId,
             'mch_id'           => $weData['mch_id'],
