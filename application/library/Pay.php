@@ -40,7 +40,7 @@ class Pay {
                 'key'                => $_SERVER['KEY'],
                 'cert_path'          => '', // XXX: 绝对路径！！！！
                 'key_path'           => '',      // XXX: 绝对路径！！！！
-                'notify_url'         => '',       // 你也可以在下单时单独设置来想覆盖它
+                'notify_url'       => 'http://scanpay.vzhen.com/scan/order_notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             ],
         ];
 
