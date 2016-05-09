@@ -59,7 +59,6 @@ class ScanController extends Core
         $result = $payLib->createOrder($order);
         error_log('DEBUG: '.$result->return_msg);
         error_log('DEBUG: '.json_encode($attributes));
-echo '<pre>';print_r($result->return_msg);echo '</pre>';exit(); 
         if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS'){
             $prepayId = $result->prepay_id;
         }
