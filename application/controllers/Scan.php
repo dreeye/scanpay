@@ -43,7 +43,7 @@ class ScanController extends Core
         $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
         $productId = strval($postObj->product_id);
         $openId = strval($postObj->openid);
-
+echo '<pre>';print_r($productId);echo '</pre>';exit(); 
         $attributes = [
             'body'             => 'iPad mini 16G 白色',
             'detail'           => 'iPad mini 16G 白色',
