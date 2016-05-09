@@ -62,13 +62,13 @@ class ScanController extends Core
         if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS'){
             $reply = [
                     'return_code' =>$result->return_code,
-                    'return_msg' =>$result->return_msg,
+                    // 'return_msg' =>$result->return_msg,
                     'appid'       =>$_SERVER['APP_ID'],
                     'mch_id'        => $_SERVER['MER_ID'],
                     'nonce_str' =>$result->nonce_str,
                     'prepay_id' => $result->prepay_id,
                     'result_code' =>$result->result_code,
-                    'err_code_des' =>$result->err_code_des ?? '',
+                    // 'err_code_des' =>$result->err_code_des ?? '',
             ];
              $reply['sign'] = \EasyWeChat\Payment\generate_sign($reply, $_SERVER['KEY'], 'md5'); 
             $xml = $this->Common->toXml($reply);
