@@ -41,6 +41,7 @@ class ScanController extends Core
         //获取微信的请求参数
         $postStr = file_get_contents('php://input');  
         $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+echo '<pre>';print_r($postObj);echo '</pre>';exit(); 
         $productId = strval($postObj->product_id);
         $openId = strval($postObj->openid);
 echo '<pre>';print_r($productId);echo '</pre>';exit(); 
