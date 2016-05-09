@@ -4,7 +4,7 @@ class ScanModel extends Model {
 
     const TBL_PRODUCT = 'product';
     const TBL_WECHAT = 'wechat';
-    const TBL_ORDER = 'order';
+    const TBL_ORDER = 'order_all';
 
     public function addProduct($data)
     {
