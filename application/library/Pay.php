@@ -33,7 +33,7 @@ class Pay {
         return $payment->prepare($order);
         
     }
-    public function notify($order)
+    public function notify()
     {
         return $this->getOptions();
         
