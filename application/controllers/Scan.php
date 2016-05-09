@@ -41,8 +41,9 @@ class ScanController extends Core
         //获取微信的请求参数
         $postStr = file_get_contents('php://input');  
         $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
-        $productId = $postObj->product_id;
-        $openId = $postObj->openid;
+        $productId = strval($postObj->product_id);
+        $openId = strval($postObj->openid);
+
         $attributes = [
             'body'             => 'iPad mini 16G 白色',
             'detail'           => 'iPad mini 16G 白色',
