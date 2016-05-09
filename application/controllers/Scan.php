@@ -1,4 +1,7 @@
 <?php
+require '../vendor/autoload.php';
+use EasyWeChat\Payment\Order;
+
 
 class ScanController extends Core
 {
@@ -35,11 +38,24 @@ class ScanController extends Core
 
     public function orderAction()
     {
-        error_log(json_encode($_GET));
-echo '<pre>';print_r($_GET);echo '</pre>';exit(); 
-        $cityMod = new CtripModel();
-        $cityData = $cityMod->getCity();
-        $this->Response->success($cityData);
+        libxml_disable_entity_loader(true);
+        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);             
+       echo '<pre>';print_r($values);echo '</pre>';exit();  
+        $attributes = [
+            'body'             => 'iPad mini 16G 白色',
+            'detail'           => 'iPad mini 16G 白色',
+            //'out_trade_no'     => '1217752501201407033233368018',
+            'total_fee'        => 0.1,
+            'notify_url'       => 'http://scanpay.vzhen.com/order_notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            // ...
+        ];
+
+        $order = new Order($attributes);
+    }
+
+    public function order_notify()
+    {
+
     }
 
 }
