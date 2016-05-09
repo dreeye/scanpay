@@ -38,7 +38,7 @@ class ScanController extends Core
 
     public function orderAction()
     {
-       echo '<pre>';print_r($GLOBALS);echo '</pre>';exit();  
+       echo '<pre>';print_r(file_get_contents('php://input'));echo '</pre>';exit();  
         //获取微信的请求参数
         if (isset($GLOBALS['HTTP_RAW_POST_DATA']) && ($GLOBALS['HTTP_RAW_POST_DATA'] != '')) 
         {   
