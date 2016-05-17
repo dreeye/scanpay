@@ -6,6 +6,7 @@ use EasyWeChat\Payment\Order;
 class ScanController extends Core
 {
     private $option;
+    public  $ltQr = 'http://qr.liantu.com/api.php?text=';
 
     public function init()
     {
@@ -138,6 +139,41 @@ class ScanController extends Core
             return true; // 或者错误消息
         }); 
 
+    }
+
+    public function create_qrAction()
+    {
+        $vsn = ( $this->_post['vsn'] ?? $this->Response->error('40016')) ? : $this->Response->error('40024');
+        $total_fee = ( $this->_post['total_fee'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40021');
+        // $total_fee .= '00';
+        $body = 'Vertu Pay';
+        $detail = 'Vertu自定义支付';
+        if (! $weData = $this->scanMod->getWechat('VertuClub', 'name')) {
+            $this->Response->error('40023');
+        }
+        $payLib = new Pay($weData['app_id'], $weData['mch_id'], $weData['key']);
+        $productId = $this->Common->random_string('alnum', 32);
+        $qrUrl = $payLib->createQrUrl($productId);
+        $product = [
+            'body' => $body,
+            'detail' => $detail,
+            'total_fee' => $total_fee,
+            'product_id' => $productId,
+            'qr_url' => $qrUrl,
+            'vsn' => $vsn,
+            'create_time' => time(),
+            'update_time' => time(),
+            
+        ];
+        if($this->scanMod->addProduct($product)) {
+            $data = [
+                'qr'=>$this->ltQr.urlencode($qrUrl),
+                'createTime'=>time(),
+            ];
+            $this->Response->success($data);
+
+        }
+        
     }
 
 }
