@@ -3,6 +3,7 @@
 # namespace Fit;
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 #header('Accept:application/json;charset=utf-8;');
 #header('Content-Type:application/x-www-form-urlencoded;charset=utf-8;');
 
