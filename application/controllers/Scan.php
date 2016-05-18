@@ -145,7 +145,16 @@ class ScanController extends Core
     {
         $vsn = ( $this->_post['vsn'] ?? $this->Response->error('40016')) ? : $this->Response->error('40024');
         $total_fee = ( $this->_post['total_fee'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40021');
-        $total_fee =(int)$total_fee.'00';
+        if ( count($vsnArr = explode('-', $vsn) ) != 2 )
+        {
+            $this->Response->error('40026');
+        } 
+        // vsn前面必须是3位字母数字,后面必须是6位数字
+        if(!(mb_strlen($vsnArr[0]) == 3) || !(mb_strlen($vsnArr[1])==6) || !$this->Common->alpha_numeric($vsnArr[0]) || !$this->Common->integer($vsnArr[1]) ) {
+            $this->Response->error('40026');
+        } 
+        
+        $total_fee = $this->Common->numeric($total_fee) ? number_format($total_fee, 2) * 100 : $this->Response->error('40025');
         $body = 'Vertu Pay';
         $detail = 'Vertu自定义支付';
         if (! $weData = $this->scanMod->getWechat('VertuClub', 'name')) {
