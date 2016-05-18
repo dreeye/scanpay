@@ -21,6 +21,8 @@ class ScanController extends Core
         $body = ( $this->_post['body'] ?? $this->Response->error('40016')) ? : $this->Response->error('40019');
         $detail = ( $this->_post['detail'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40020');
         $total_fee = ( $this->_post['total_fee'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40021');
+        $chargeId = $this->_post['ChargeID'] ?? '';
+
         if (! $weData = $this->scanMod->getWechat($wechat, 'name')) {
             $this->Response->error('40023');
         }
@@ -33,6 +35,7 @@ class ScanController extends Core
             'total_fee' => $total_fee,
             'product_id' => $productId,
             'qr_url' => $qrUrl,
+            'charge_id' => $chargeId,
             'create_time' => time(),
             'update_time' => time(),
             
