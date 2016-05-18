@@ -156,7 +156,7 @@ class ScanController extends Core
         if(!(mb_strlen($vsnArr[0]) == 3) || !(mb_strlen($vsnArr[1])==6) || !$this->Common->alpha_numeric($vsnArr[0]) || !$this->Common->integer($vsnArr[1]) ) {
             $this->Response->error('40026');
         } 
-        $total_fee = $this->Common->numeric($total_fee) ? number_format($total_fee, 2) * 100 : $this->Response->error('40025');
+        $total_fee = $this->Common->numeric($total_fee) ? number_format($total_fee, 2, '.', '') * 100 : $this->Response->error('40025');
         $body = 'Vertu Pay';
         $detail = 'Vertu自定义支付';
         if (! $weData = $this->scanMod->getWechat('VertuClub', 'name')) {
