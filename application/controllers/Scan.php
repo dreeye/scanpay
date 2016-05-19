@@ -22,7 +22,6 @@ class ScanController extends Core
         $detail = ( $this->_post['detail'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40020');
         $total_fee = ( $this->_post['total_fee'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40021');
         $chargeId = $this->_post['ChargeID'] ?? '';
-
         if (! $weData = $this->scanMod->getWechat($wechat, 'name')) {
             $this->Response->error('40023');
         }
@@ -72,12 +71,24 @@ class ScanController extends Core
             error_log('wechat data is no exit: app id ='.$appId);
             exit();
         }
+        // chargeid 处理
+        if($chargeId = $productData['charge_id'])
+        {
+            $attachArr = [
+                        'chargeId'=>$chargeId,
+            ];
+            $attach = json_encode(['chargeId'=>$chargeId]);
+        } else {
+            $attach = '';
+        }
+        
         $attributes = [
             'body'             => $productData['body'],
             'detail'           => $productData['detail'],
             'out_trade_no'     => $this->Common->random_string('alnum', 32),
             'product_id'       => $productId,
             'openid'           => $openId,
+            'attach'           => $attach,
             'total_fee'        => $productData['total_fee'],
             'notify_url'       => 'http://scanpay.vzhen.com/scan/order_notify', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type'       => 'NATIVE',
@@ -122,6 +133,7 @@ class ScanController extends Core
         $postStr = file_get_contents('php://input');  
         $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
         $appId = strval($postObj->appid);
+        $attach = strval($postObj->attach) ?? '';
         // 根据微信发来的app id获取微信数据 
         if ( ! $weData = $this->scanMod->getWechat($appId) ) {
             error_log('wechat data is no exit: app id ='.$appId);
@@ -129,7 +141,7 @@ class ScanController extends Core
         }
         $payLib = new Pay($weData['app_id'], $weData['mch_id'], $weData['key']);
         $payment = $payLib->notify();
-        $response = $payment->handleNotify(function($notify, $successful){
+        $response = $payment->handleNotify(function($notify, $successful) use ($attach) {
             // 你的逻辑
             error_log("DEBUG notify :".$notify);
             if (!$this->scanMod->getOrder($notify->out_trade_no)) {
@@ -138,6 +150,11 @@ class ScanController extends Core
             }
             if ($successful) {
                 $this->scanMod->updateOrderPaid($notify->out_trade_no);
+                if($attach){
+                    $attachArr = json_decode($attach);
+                    $chargeId = $attachArr['chargeId'];
+                    error_log("DEBUG ChargeID ".$chargeId);
+                }
             } 
             return true; // 或者错误消息
         }); 
@@ -147,6 +164,14 @@ class ScanController extends Core
     public function create_qrAction()
     {
         $vsn = ( $this->_post['vsn'] ?? $this->Response->error('40016')) ? : $this->Response->error('40024');
+        $remark = $this->_post['remark'] ?? '';
+        if ($remark)
+        {
+            if(mb_strlen($remark) > 50)
+            {
+                $this->Response->error('40027');
+            }
+        }
         $total_fee = ( $this->_post['total_fee'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40021');
         if ( count($vsnArr = explode('-', $vsn) ) != 2 )
         {
@@ -172,6 +197,7 @@ class ScanController extends Core
             'product_id' => $productId,
             'qr_url' => $qrUrl,
             'vsn' => $vsn,
+            'remark' => $remark,
             'create_time' => time(),
             'update_time' => time(),
             
