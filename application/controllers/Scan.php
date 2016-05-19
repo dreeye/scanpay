@@ -133,8 +133,6 @@ class ScanController extends Core
         $postStr = file_get_contents('php://input');  
         $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
         $appId = strval($postObj->appid);
-        $attach = strval($postObj->attach) ?? '';
-        error_log("DEBUG attach: ".$attach);
         // 根据微信发来的app id获取微信数据 
         if ( ! $weData = $this->scanMod->getWechat($appId) ) {
             error_log('wechat data is no exit: app id ='.$appId);
@@ -151,8 +149,8 @@ class ScanController extends Core
             }
             if ($successful) {
                 $this->scanMod->updateOrderPaid($notify->out_trade_no);
-                if($attach){
-                    $attachArr = json_decode($attach);
+                if($notify->attach){
+                    $attachArr = json_decode($notify->attach);
                     $chargeId = $attachArr['chargeId'];
                     error_log("DEBUG ChargeID ".$chargeId);
                 }
