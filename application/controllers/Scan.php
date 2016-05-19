@@ -157,8 +157,8 @@ class ScanController extends Core
             $this->Response->error('40026');
         } 
         $total_fee = $this->Common->numeric($total_fee) ? number_format($total_fee, 2, '.', '') * 100 : $this->Response->error('40025');
-        $body = 'Vertu Pay';
-        $detail = 'Vertu自定义支付';
+        $body = 'Payment for '.$vsn;
+        $detail = 'Payment for '.$vsn;
         if (! $weData = $this->scanMod->getWechat('VertuClub', 'name')) {
             $this->Response->error('40023');
         }
