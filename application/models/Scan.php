@@ -77,12 +77,12 @@ class ScanModel extends Model {
             'update_time' => time(),
         ];
         if ($this->_db->update(SELF::TBL_ORDER, $data) ) {
-            return True;
+            return TRUE;
         }
         else
         {
              error_log('update order paid error'. $this->_db->getLastError());
-             exit();
+            return FALSE;
 
         }
 

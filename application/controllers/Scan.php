@@ -148,14 +148,17 @@ class ScanController extends Core
                 return 'Order not exist';
             }
             if ($successful) {
-                $this->scanMod->updateOrderPaid($notify->out_trade_no);
+                if ( ! $this->scanMod->updateOrderPaid($notify->out_trade_no) )
+                {
+                    return FALSE;
+                }
                 if($notify->attach){
                     $attachObj = json_decode($notify->attach);
                     $chargeId = $attachObj->chargeId;
                     error_log("DEBUG ChargeID ".$chargeId);
                 }
             } 
-            return true; // 或者错误消息
+            return TRUE; // 或者错误消息
         });
         error_log("DEBUG response notify : ".$response); 
         return $response;
