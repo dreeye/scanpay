@@ -140,7 +140,7 @@ class ScanController extends Core
         }
         $payLib = new Pay($weData['app_id'], $weData['mch_id'], $weData['key']);
         $payment = $payLib->notify();
-        $response = $payment->handleNotify(function($notify, $successful) use ($attach) {
+        $response = $payment->handleNotify(function($notify, $successful) {
             // 你的逻辑
             error_log("DEBUG notify :".$notify);
             if (!$this->scanMod->getOrder($notify->out_trade_no)) {
