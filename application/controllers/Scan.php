@@ -156,7 +156,8 @@ class ScanController extends Core
                 }
             } 
             return true; // 或者错误消息
-        }); 
+        });
+        error_log("DEBUG response notify : "$response); 
         return $response;
 
     }
