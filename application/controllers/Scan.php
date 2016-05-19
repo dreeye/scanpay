@@ -134,6 +134,7 @@ class ScanController extends Core
         $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
         $appId = strval($postObj->appid);
         $attach = strval($postObj->attach) ?? '';
+        error_log("DEBUG attach: ".$attach);
         // 根据微信发来的app id获取微信数据 
         if ( ! $weData = $this->scanMod->getWechat($appId) ) {
             error_log('wechat data is no exit: app id ='.$appId);
