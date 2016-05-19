@@ -150,8 +150,8 @@ class ScanController extends Core
             if ($successful) {
                 $this->scanMod->updateOrderPaid($notify->out_trade_no);
                 if($notify->attach){
-                    $attachArr = json_decode($notify->attach);
-                    $chargeId = $attachArr['chargeId'];
+                    $attachObj = json_decode($notify->attach);
+                    $chargeId = $attachObj->chargeId;
                     error_log("DEBUG ChargeID ".$chargeId);
                 }
             } 
