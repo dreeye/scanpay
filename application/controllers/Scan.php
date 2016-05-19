@@ -1,7 +1,7 @@
 <?php
 require '../vendor/autoload.php';
 use EasyWeChat\Payment\Order;
-
+use GuzzleHttp\Client;
 
 class ScanController extends Core
 {
@@ -140,8 +140,8 @@ class ScanController extends Core
         }
         $payLib = new Pay($weData['app_id'], $weData['mch_id'], $weData['key']);
         $payment = $payLib->notify();
+        // 微信的支付结果通知,successfule为ture说明支付成功
         $response = $payment->handleNotify(function($notify, $successful) {
-            // 你的逻辑
             error_log("DEBUG notify :".$notify);
             if (!$this->scanMod->getOrder($notify->out_trade_no)) {
                 error_log("DEBUG notify order not exist:".$notify->out_trade_no);
@@ -156,6 +156,7 @@ class ScanController extends Core
                     $attachObj = json_decode($notify->attach);
                     $chargeId = $attachObj->chargeId;
                     error_log("DEBUG ChargeID ".$chargeId);
+                    $this->pushWb($chargeId);
                 }
             } 
             return TRUE; // 或者错误消息
@@ -164,10 +165,16 @@ class ScanController extends Core
         return $response->send();
 
     }
-
+    /**
+     * vertu vsn 支付
+     * 可自定义金额
+     * param:
+     * vsn ,remark, total_fee
+     */
     public function create_qrAction()
     {
         $vsn = ( $this->_post['vsn'] ?? $this->Response->error('40016')) ? : $this->Response->error('40024');
+        // remark备注可为空或不传,不为空必须小于50个字符
         $remark = $this->_post['remark'] ?? '';
         if ($remark)
         {
@@ -176,16 +183,17 @@ class ScanController extends Core
                 $this->Response->error('40027');
             }
         }
+        // 金额,支持小数,最后换算成分为单位,适于微信支付要求
         $total_fee = ( $this->_post['total_fee'] ?? $this->Response->error('40016') ) ? : $this->Response->error('40021');
+        $total_fee = $this->Common->numeric($total_fee) ? number_format($total_fee, 2, '.', '') * 100 : $this->Response->error('40025');
+        // vsn前面必须是3位字母数字,后面必须是6位数字
         if ( count($vsnArr = explode('-', $vsn) ) != 2 )
         {
             $this->Response->error('40026');
         } 
-        // vsn前面必须是3位字母数字,后面必须是6位数字
         if(!(mb_strlen($vsnArr[0]) <= 3) || !(mb_strlen($vsnArr[1])==6) || !$this->Common->alpha_numeric($vsnArr[0]) || !$this->Common->integer($vsnArr[1]) ) {
             $this->Response->error('40026');
         } 
-        $total_fee = $this->Common->numeric($total_fee) ? number_format($total_fee, 2, '.', '') * 100 : $this->Response->error('40025');
         $body = 'Payment for '.$vsn;
         $detail = 'Payment for '.$vsn;
         if (! $weData = $this->scanMod->getWechat('VertuClub', 'name')) {
@@ -215,6 +223,26 @@ class ScanController extends Core
 
         }
         
+    }
+    /**
+     * 推送给健康网
+     *
+     *
+     *
+     */
+    public function pushWb($ChargeId)
+    {
+        $client = new GuzzleHttp\Client();
+        $response = $client->request('POST', 'http://vertu.vzhen.com/api/Charge/UpdateStatus', [
+            'form_params' => [
+                'ChargeId' => $ChargeId,
+                'Status' => '2',
+            ]
+        ]);
+        $body = json_decode($response->getBody()->getContents());
+        $result = $body->Result;
+        $message = $body->Message;
+        error_log("DEBUG WB API: message= ".$message." ChargeId= ".$ChargeId);
     }
 
 }
