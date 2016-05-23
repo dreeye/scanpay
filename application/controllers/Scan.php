@@ -200,7 +200,8 @@ class ScanController extends Core
             $this->Response->error('40023');
         }
         $payLib = new Pay($weData['app_id'], $weData['mch_id'], $weData['key']);
-        $productId = $this->Common->random_string('alnum', 32);
+        # $productId = $this->Common->random_string('alnum', 32);
+        $productId = $vsn;
         $qrUrl = $payLib->createQrUrl($productId);
         $product = [
             'body' => $body,
