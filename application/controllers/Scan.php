@@ -85,7 +85,7 @@ class ScanController extends Core
         $attributes = [
             'body'             => $productData['body'],
             'detail'           => $productData['detail'],
-            'out_trade_no'     => $productData['vsn'] ? $productData['vsn'].'='.$this->Common->random_string('alnum', 17) : $this->Common->random_string('alnum', 32),
+            'out_trade_no'     => $productData['vsn'] ? $productData['vsn'].'-'.$this->Common->random_string('alnum', 17) : $this->Common->random_string('alnum', 32),
             'product_id'       => $productId,
             'openid'           => $openId,
             'attach'           => $attach,
