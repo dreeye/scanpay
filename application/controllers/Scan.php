@@ -85,7 +85,7 @@ class ScanController extends Core
         $attributes = [
             'body'             => $productData['body'],
             'detail'           => $productData['detail'],
-            'out_trade_no'     => $this->Common->random_string('alnum', 32),
+            'out_trade_no'     => $productData['vsn'] ? : $this->Common->random_string('alnum', 32),
             'product_id'       => $productId,
             'openid'           => $openId,
             'attach'           => $attach,
@@ -200,8 +200,7 @@ class ScanController extends Core
             $this->Response->error('40023');
         }
         $payLib = new Pay($weData['app_id'], $weData['mch_id'], $weData['key']);
-        # $productId = $this->Common->random_string('alnum', 32);
-        $productId = $vsn;
+        $productId = $this->Common->random_string('alnum', 32);
         $qrUrl = $payLib->createQrUrl($productId);
         $product = [
             'body' => $body,
